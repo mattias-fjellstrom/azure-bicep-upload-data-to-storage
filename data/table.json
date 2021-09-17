@@ -1,0 +1,6 @@
+{
+  "PartitionKey": "1",
+  "RowKey": "1",
+  "Name": "Hello",
+  "Message": "World"
+}
