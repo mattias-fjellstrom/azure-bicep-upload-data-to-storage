@@ -36,7 +36,7 @@ az deployment sub create \
     --parameters blobExample=true
 ```
 
-### Queue Service
+### Queue example
 
 A new storage account is created with a message queue. The queue data in [data/queue.xml](./data/queue.xml) will be posted as a message in the queue. The operation requires a SAS token, this is generated using the Azure CLI. There is no direct support to post messages to a storage queue using the Azure CLI, thus the REST API is used through the `az rest` command. The script that generates the SAS token and issues the REST API call is available in [scripts/queue.sh](./scripts/queue.sh). Deploy the example with the Azure CLI.
 
@@ -48,7 +48,7 @@ az deployment sub create \
     --parameters queueExample=true
 ```
 
-### Table Service
+### Table example
 
 A new storage account is created with a storage table. The table row data in [data/table.json](./data/table.json) will be added as a row in the table. The operation requires a SAS token, this is generated using the Azure CLI. There is no direct support to add a row to a table using the Azure CLI, thus the REST API is used through the `az rest` command. The script that generates the SAS token and issues the REST API call is available in [scripts/table.sh](./scripts/table.sh). Deploy the example with the Azure CLI.
 
@@ -60,7 +60,7 @@ az deployment sub create \
     --parameters tableExample=true
 ```
 
-### File Service
+### File example
 
 A new storage account is created with a file share. The file in [data/file.txt](./data/file.txt) will be uploaded to the file share. Deploy the example with the Azure CLI.
 
