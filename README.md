@@ -74,11 +74,16 @@ az deployment sub create \
 
 ## Clean-up
 
+Delete the resource group.
+
 ```bash
-az
+rgName=$(az group list \
+    --query "[?@.tags.application && tags.application == 'azure-bicep-upload-data-to-storage'] | [0].name" \
+    --output tsv)
+az group delete --name $rgName --yes --no-wait
 ```
 
 ## Limitations
 
-- In the current version of Azure Bicep (v. ) it is not possible to use dynamic strings in the `loadTextContent` function. This prohibits us from using a loop construct for the deployment script resources, which would have allowed us to add several blobs, queue messages, table rows, and files, in the same deployment. A workaround is to expand the script used to perform the upload in creative ways (e.g. use a loop in Bash).
+- In the current version of Azure Bicep ([v0.4.613](https://github.com/Azure/bicep/releases/tag/v0.4.613)) it is not possible to use dynamic strings in the `loadTextContent` function. This prohibits us from using a loop construct for the deployment script resources, which would have allowed us to add several blobs, queue messages, table rows, and files, in the same deployment. A workaround is to expand the script used to perform the upload in creative ways (e.g. use a loop in Bash).
 - Working with blobs and files is convenient because the Azure CLI supports upload operations out of the box. Working with queues and tables is not supported out of the box, which means we have to generate SAS-tokens to authenticate directly to the REST API. This is why separate scripts are provided for these services in order to keep the Bicep code clean.
