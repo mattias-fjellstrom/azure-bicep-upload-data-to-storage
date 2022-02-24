@@ -37,6 +37,6 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
         value: loadTextContent('../data/file.txt')
       }
     ]
-    scriptContent: 'echo $CONTENT > ${filename} && az storage file upload --source ${filename} -s ${fileShareName}'
+    scriptContent: 'echo "$CONTENT" > ${filename} && az storage file upload --source ${filename} -s ${fileShareName}'
   }
 }
