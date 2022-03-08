@@ -1,5 +1,7 @@
 # Use Azure Bicep to upload data to an Azure Storage Account
 
+![lint](https://github.com/mattias-fjellstrom/azure-bicep-upload-data-to-storage/actions/workflows/lint.yml/badge.svg)
+
 These examples demonstrate how to upload data to the different storage services in a Storage Account using Azure Bicep.
 
 ### Motivation
@@ -11,7 +13,7 @@ Two reasons why you might want to do this:
 
 ## Prerequisites
 
-- Azure CLI ([install](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli))
+- Azure CLI ([install](https://docs.microsoft.com/cli/azure/install-azure-cli))
 - Azure Bicep CLI (install with `az bicep install`)
 - Set a default subscription with `az account set --subscription <name or id of subscription>`
 - You should be an Owner of the subscription you use
@@ -72,6 +74,18 @@ az deployment sub create \
     --parameters fileExample=true
 ```
 
+### All examples
+
+Try all examples at the same time.
+
+```bash
+az deployment sub create \
+    --name all-examples \
+    --location $location \
+    --template-file ./main.bicep \
+    --parameters blobExample=true queueExample=true tableExample=true fileExample=true
+```
+
 ## Clean-up
 
 Delete the resource group.
@@ -85,5 +99,5 @@ az group delete --name $rgName --yes --no-wait
 
 ## Limitations
 
-- In the current version of Azure Bicep ([v0.4.613](https://github.com/Azure/bicep/releases/tag/v0.4.613)) it is not possible to use dynamic strings in the `loadTextContent` function. This prohibits us from using a loop construct for the deployment script resources, which would have allowed us to add several blobs, queue messages, table rows, and files, in the same deployment. A workaround is to expand the script used to perform the upload in creative ways (e.g. use a loop in Bash).
+- In the current version of Azure Bicep ([v0.4.1272](https://github.com/Azure/bicep/releases/tag/v0.4.613)) it is not possible to use dynamic strings in the `loadTextContent` function. This prohibits us from using a loop construct for the deployment script resources, which would have allowed us to add several blobs, queue messages, table rows, and files, in the same deployment. A workaround is to expand the script used to perform the upload in creative ways (e.g. use a loop in Bash).
 - Working with blobs and files is convenient because the Azure CLI supports upload operations out of the box. Working with queues and tables is not supported out of the box, which means we have to generate SAS-tokens to authenticate directly to the REST API. This is why separate scripts are provided for these services in order to keep the Bicep code clean.

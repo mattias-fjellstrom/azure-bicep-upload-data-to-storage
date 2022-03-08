@@ -7,17 +7,32 @@ param utcValue string = utcNow()
 @description('Name of the file share')
 param fileShareName string = 'datashare'
 
-module storage 'storageAccount.bicep' = {
-  name: 'storageAccount'
-  params: {
-    deployFile: true
-    entityName: fileShareName
+@description('Azure region where resources should be deployed')
+param location string = resourceGroup().location
+
+@description('Desired name of the storage account')
+param storageAccountName string = uniqueString(resourceGroup().id, deployment().name, 'file')
+
+resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+  name: storageAccountName
+  location: location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  kind: 'StorageV2'
+
+  resource fileService 'fileServices' = {
+    name: 'default'
+
+    resource share 'shares' = {
+      name: fileShareName
+    }
   }
 }
 
 resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   name: 'deployscript-upload-file-${utcValue}'
-  location: resourceGroup().location
+  location: location
   kind: 'AzureCLI'
   properties: {
     azCliVersion: '2.26.1'
@@ -26,11 +41,11 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     environmentVariables: [
       {
         name: 'AZURE_STORAGE_ACCOUNT'
-        value: storage.outputs.accountName
+        value: storage.name
       }
       {
         name: 'AZURE_STORAGE_KEY'
-        secureValue: storage.outputs.accountKey
+        secureValue: storage.listKeys().keys[0].value
       }
       {
         name: 'CONTENT'

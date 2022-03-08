@@ -1,0 +1,11 @@
+name: bicep-lint
+
+on: push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Bicep linter
+        run: az bicep build --file main.bicep
